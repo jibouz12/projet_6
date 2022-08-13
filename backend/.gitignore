@@ -1,1 +1,4 @@
 node_modules
+
+# garder les données sensibles en local
+.env
