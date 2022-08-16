@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
        const token = req.headers.authorization.split(' ')[1];
        const decodedToken = jwt.verify(token, 'CLE_SECRETE_POUR_ENCODAGE_DU_TOKEN');
        const userId = decodedToken.userId;
-       req.auth = {
+       req.authorize = {
            userId: userId
        };
 	next();
