@@ -37,3 +37,27 @@ exports.createSauce = (req, res, next) => {
     .then(() => { res.status(201).json({message: 'Objet enregistré !'})})
     .catch(error => { res.status(400).json( { error })})
 };
+
+//////////////////////////////
+// modifier sauce
+exports.modifySauce = (req, res, next) => {
+// regarder si l'utilisateur télécharge une nouvelle image ou pas
+    const sauceObject = req.file ? {
+        ...JSON.parse(req.body.sauce),
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    } : { ...req.body };
+// retirer l'ID générée par le json
+    delete sauceObject._id;
+    Sauce.findOne({ _id: req.params.id })
+        .then((sauce) => {
+            if (sauce.userId != req.authorize.userId) {   
+                res.status(401).json({ message: 'Non authorisé !'});
+            } else {
+                Sauce.updateOne({ _id: req.params.id}, { ...sauceObject, _id: req.params.id})
+                .then(() => res.status(200).json({message : 'Objet modifié !'})) 
+            }
+        })
+        .catch((error) => {
+            res.status(400).json({ error });
+        });
+};

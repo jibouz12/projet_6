@@ -12,6 +12,7 @@ const router = express.Router();
 router.get('/', authorize, saucesCtrl.getAllSauces);
 router.post('/', authorize, multer, saucesCtrl.createSauce);
 router.get('/:id', authorize, multer, saucesCtrl.getOneSauce);
+router.put('/:id', authorize, multer, saucesCtrl.modifySauce);
 
 
 module.exports = router;
