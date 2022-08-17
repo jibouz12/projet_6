@@ -8,17 +8,22 @@ const jwt = require("jsonwebtoken");
 // création nouvel utilisateur
 // ( vérification que le mail est unique dans models )
 exports.signup = (req, res, next) => {
-    bcrypt.hash(req.body.password, 10)
-      .then(hash => {
-        const user = new User({
-          email: req.body.email,
-          password: hash
-        });
-        user.save()
-          .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-          .catch(error => res.status(400).json({ error }));
-      })
-      .catch(error => res.status(500).json({ error : "erreur" }));
+    let regexEmail = /[a-zA-Z1-9.-_]+[@]+[a-zA-Z1-9.-_]+[.]+[a-z]/;
+    if (regexEmail.test(req.body.email)) {
+        bcrypt.hash(req.body.password, 10)
+        .then(hash => {
+            const user = new User({
+            email: req.body.email,
+            password: hash
+            });
+            user.save()
+            .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+            .catch(error => res.status(400).json({ error }));
+        })
+        .catch(error => res.status(500).json({ error : "erreur" }));
+    } else {
+        return res.status(500).json({ message : "Respectez un format Email valide !" });
+    }
   };
 
 //////////////////////////////////////
