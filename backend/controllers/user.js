@@ -24,7 +24,7 @@ exports.signup = (req, res, next) => {
     } else {
         return res.status(500).json({ message : "Respectez un format Email valide !" });
     }
-  };
+};
 
 //////////////////////////////////////
 // connexion
@@ -34,7 +34,7 @@ exports.signup = (req, res, next) => {
 // si password différent --> erreur 401
 // si password ok --> userId + Token ( token contient userId, token et est valable 24h)
 exports.login = (req, res, next) => {
-User.findOne({ email: req.body.email })
+    User.findOne({ email: req.body.email })
     .then(user => {
         if (!user) {
             return res.status(401).json({ message: 'Paire login/mot de passe incorrecte' });
