@@ -24,8 +24,11 @@ exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
 // retirer l'ID générée par le json
     delete sauceObject._id;  
+// retirer l'userID de l'objet envoyé et utiliser celui du token par sécurité
+    delete sauceObject.userId;
     const sauce = new Sauce({
         ...sauceObject,
+        userId: req.authorize.userId,
 // récupérer l'image et créer l'url
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         likes: 0,
@@ -109,7 +112,7 @@ exports.likeSauce = (req, res, next) => {
                     $inc: { likes: +1 },
                     _id : sauceID
                 })
-                .then(() => { res.status(200).json({message: 'Objet liké !'})})
+                .then(() => { res.status(200).json({message: 'Sauce likée !'})})
                 .catch(error => res.status(401).json({ error }));
             }
 // si like = -1 --> sauce +1 dislike
@@ -120,7 +123,7 @@ exports.likeSauce = (req, res, next) => {
                     $inc: { dislikes: +1 },
                     _id : sauceID
                 })
-                .then(() => { res.status(200).json({message: 'Objet disliké !'})})
+                .then(() => { res.status(200).json({message: 'Sauce dislikée !'})})
                 .catch(error => res.status(401).json({ error }));
             }
 // si like = 0 

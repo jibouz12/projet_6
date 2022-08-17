@@ -6,7 +6,7 @@ const path = require('path');
 require('dotenv').config();
 
 ////////////////////////////////
-// connexion mongoose
+// connexion mongoose (base de données noSQL)
 mongoose.connect('mongodb+srv://' + process.env.SECRET + '@cluster0.qzefequ.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
@@ -14,12 +14,12 @@ mongoose.connect('mongodb+srv://' + process.env.SECRET + '@cluster0.qzefequ.mong
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 //////////////////////////////
-// utilisation de express
+// utilisation d'express
 const app = express();
 app.use(express.json());
 
 //////////////////////////////////
-// permettre l'accès à l'API
+// permettre l'accès à l'API (CORS)
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
