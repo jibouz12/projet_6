@@ -37,8 +37,8 @@ exports.createSauce = (req, res, next) => {
         usersDisliked: []
     });
     sauce.save()
-    .then(() => { res.status(201).json({message: 'Objet enregistré !'})})
-    .catch(error => { res.status(400).json( { error })})
+    .then(() => { res.status(201).json({ message: 'Sauce enregistrée !' })})
+    .catch(error => { res.status(400).json({ error })})
 };
 
 //////////////////////////////
@@ -56,10 +56,10 @@ exports.modifySauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then((sauce) => {
             if (sauce.userId != req.authorize.userId) {   
-                res.status(403).json({ message: 'Non autorisé !'});
+                res.status(403).json({ message: 'Utilisateur non autorisé !' });
             } else {
-                Sauce.updateOne({ _id: req.params.id}, { ...sauceObject, _id: req.params.id})
-                .then(() => res.status(200).json({message : 'Objet modifié !'})) 
+                Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+                .then(() => res.status(200).json({ message : 'Sauce modifiée !' })) 
                 .catch(error => res.status(401).json({ error }));
             }
         })
@@ -71,15 +71,15 @@ exports.modifySauce = (req, res, next) => {
 ////////////////////////////////
 // supprimer sauce
 exports.deleteSauce = (req, res, next) => {
-    Sauce.findOne({ _id: req.params.id})
+    Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
             if (sauce.userId != req.authorize.userId) {
-                res.status(403).json({message: 'Non autorisé !'});
+                res.status(403).json({ message: 'Utilisateur non autorisé !' });
             } else {
                 const filename = sauce.imageUrl.split('/images/')[1];
                 fs.unlink(`images/${filename}`, () => {
-                    Sauce.deleteOne({_id: req.params.id})
-                    .then(() => { res.status(200).json({message: 'Objet supprimé !'})})
+                    Sauce.deleteOne({ _id: req.params.id })
+                    .then(() => { res.status(200).json({ message: 'Sauce supprimée !' })})
                     .catch(error => res.status(401).json({ error }));
                 });
             }
@@ -99,20 +99,19 @@ exports.likeSauce = (req, res, next) => {
 // récupérer l'ID de la sauce 
     let sauceID = req.params.id;
 // vérifier que le likeur ne soit pas le créateur de la sauce
-    Sauce.findOne({ _id: sauceID})
+    Sauce.findOne({ _id: sauceID })
     .then(sauce => {
         if (sauce.userId == req.authorize.userId) {
-            res.status(403).json({message: 'Non autorisé !'});
+            res.status(403).json({ message: 'Utilisateur non autorisé !' });
         } else {
 // si like = 1 --> sauce +1 like
             if (like == 1) {
                 Sauce.updateOne({ _id : sauceID }, 
                 {
                     $push: { usersLiked: likeurID },
-                    $inc: { likes: +1 },
-                    _id : sauceID
+                    $inc: { likes: +1 }
                 })
-                .then(() => { res.status(200).json({message: 'Sauce likée !'})})
+                .then(() => { res.status(200).json({ message: 'Sauce likée !' })})
                 .catch(error => res.status(401).json({ error }));
             }
 // si like = -1 --> sauce +1 dislike
@@ -120,10 +119,9 @@ exports.likeSauce = (req, res, next) => {
                 Sauce.updateOne({ _id : sauceID }, 
                 {
                     $push: { usersDisliked: likeurID },
-                    $inc: { dislikes: +1 },
-                    _id : sauceID
+                    $inc: { dislikes: +1 }
                 })
-                .then(() => { res.status(200).json({message: 'Sauce dislikée !'})})
+                .then(() => { res.status(200).json({ message: 'Sauce dislikée !' })})
                 .catch(error => res.status(401).json({ error }));
             }
 // si like = 0 
@@ -132,10 +130,9 @@ exports.likeSauce = (req, res, next) => {
                 Sauce.updateOne({ _id : sauceID }, 
                 {
                     $pull: { usersLiked: likeurID },
-                    $inc: { likes: -1 },
-                    _id : sauceID
+                    $inc: { likes: -1 }
                 })
-                .then(() => { res.status(200).json({message: 'Like annulé !'})})
+                .then(() => { res.status(200).json({ message: 'Like annulé !' })})
                 .catch(error => res.status(401).json({ error }));
             }
 // si on avait déjà disliké --> retirer le dislike et id du likeur
@@ -143,10 +140,9 @@ exports.likeSauce = (req, res, next) => {
                 Sauce.updateOne({ _id : sauceID }, 
                 {
                     $pull: { usersDisliked: likeurID },
-                    $inc: { dislikes: -1 },
-                    _id : sauceID
+                    $inc: { dislikes: -1 }
                 })
-                .then(() => { res.status(200).json({ message: 'Dislike annulé !'})})
+                .then(() => { res.status(200).json({ message: 'Dislike annulé !' })})
                 .catch(error => res.status(401).json({ error }));
             } 
         }})
