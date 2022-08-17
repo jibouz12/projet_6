@@ -1,8 +1,0 @@
-# ignorer tous les fichiers du dossier images (et les sous-dossiers)
-*
-/*
-
-# sauf le fichier .gitignore (pour garder un fichier dans le dossier images 
-# pour que celui-ci apparaisse dans github
-# ( github n'ajoute pas de dossiers vides )
-!.gitignore
