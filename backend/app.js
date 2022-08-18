@@ -6,7 +6,7 @@ const path = require('path');
 require('dotenv').config();
 
 ////////////////////////////////
-// connexion mongoose (base de données noSQL)
+// connexion mongoDB via mongoose (base de données noSQL)
 mongoose.connect('mongodb+srv://' + process.env.SECRET + '@cluster0.qzefequ.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
