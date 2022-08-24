@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+require('dotenv').config();
 
 /////////////////////
 // inscription 
@@ -26,7 +27,7 @@ exports.signup = (req, res, next) => {
     }
 };
 
-//////////////////////////////////////
+/////////////////////////////////////
 // connexion
 // cherche si mail existe:
 // si non --> erreur 401
@@ -48,7 +49,7 @@ exports.login = (req, res, next) => {
                     userId: user._id,
                     token: jwt.sign(
                         { userId: user._id },
-                        'CLE_SECRETE_POUR_ENCODAGE_DU_TOKEN',
+                        "" + process.env.CLE_SECRETE,
                         { expiresIn: '24h' }
                     )
                 });
